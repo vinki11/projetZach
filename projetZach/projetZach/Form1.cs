@@ -41,7 +41,24 @@ namespace projetZach
                             FileStream fs = myStream as FileStream;
                             string fileName = "";
                             fileName = fs.Name;
-                            txtFileName.Text = Path.GetFileName(fileName);
+                            txtFileName.Text = Path.GetFileName(fileName);                            
+
+                            //code pour le graph
+                            graphZach.Visible = true;
+                            //string query = string.Format("select shipcity, count(orderid) from orders where shipcountry = '{0}' group by shipcity", ddlCountries.SelectedValue);
+                            DataTable dt = new DataTable();
+                            string[] x = new string[dt.Rows.Count];
+                            int[] y = new int[dt.Rows.Count];
+                            for (int i = 0; i < dt.Rows.Count; i++)
+                            {
+                                x[i] = dt.Rows[i][0].ToString();
+                                y[i] = Convert.ToInt32(dt.Rows[i][1]);
+                            }
+                            graphZach.Series[0].Points.DataBindXY(x, y);
+                            //graphZach.Series[0].ChartType = SeriesChartType.Pie;
+                           //graphZach.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
+                            graphZach.Legends[0].Enabled = true;
+
                             Convert_CSV_To_Excel(fileName);
                         }
                     }
@@ -65,29 +82,114 @@ namespace projetZach
             string worksheetsName = Path.GetFileNameWithoutExtension(filename);
 
             bool firstRowIsHeader = false;
+            DataTable dt = new DataTable();
+            DataTable dtColonne = new DataTable();
 
             var format = new ExcelTextFormat();
             format.Delimiter = ',';
             format.EOL = "\r";              // DEFAULT IS "\r\n";
                                             // format.TextQualifier = '"';
-            String outputPath = "";
+           /* String outputPath = "";
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 outputPath = fbd.SelectedPath;
-            }
+            }*/
 
             using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
                 worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
+                /*package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));*/
+
+                dt = GetWorksheetAsDataTable(worksheet);
+                //aller chercher la bonne colonne et l'assigner a un dt fix
+                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType);
             }
+
 
             /*Console.WriteLine("Finished!");
             Console.ReadLine();*/
+
+            //http://stackoverflow.com/questions/29976752/create-excel-graph-with-epplus
+        }
+
+        public static DataTable GetWorksheetAsDataTable(ExcelWorksheet worksheet)
+        {
+            var dt = new DataTable(worksheet.Name);
+            dt.Columns.AddRange(GetDataColumns(worksheet).ToArray());
+            var headerOffset = 1; //have to skip header row
+            var width = dt.Columns.Count;
+            var depth = GetTableDepth(worksheet, headerOffset);
+            for (var i = 1; i <= depth; i++)
+            {
+                var row = dt.NewRow();
+                for (var j = 1; j <= width; j++)
+                {
+                    var currentValue = worksheet.Cells[i + headerOffset, j].Value;
+
+                    //have to decrement b/c excel is 1 based and datatable is 0 based.
+                    row[j - 1] = currentValue == null ? null : currentValue.ToString();
+                }
+
+                dt.Rows.Add(row);
+            }
+
+            return dt;
+        }
+
+        private static int GetTableDepth(ExcelWorksheet worksheet, int headerOffset)
+        {
+            var i = 1;
+            var j = 1;
+            var cellValue = worksheet.Cells[i + headerOffset, j].Value;
+            while (cellValue != null)
+            {
+                i++;
+                cellValue = worksheet.Cells[i + headerOffset, j].Value;
+            }
+
+            return i - 1; //subtract one because we're going from rownumber (1 based) to depth (0 based)
+        }
+
+        private static IEnumerable<DataColumn> GetDataColumns(ExcelWorksheet worksheet)
+        {
+            return GatherColumnNames(worksheet).Select(x => new DataColumn(x));
+        }
+
+        private static IEnumerable<string> GatherColumnNames(ExcelWorksheet worksheet)
+        {
+            var columns = new List<string>();
+
+            var i = 1;
+            var j = 1;
+            var columnName = worksheet.Cells[i, j].Value;
+            while (columnName != null)
+            {
+                columns.Add(GetUniqueColumnName(columns, columnName.ToString()));
+                j++;
+                columnName = worksheet.Cells[i, j].Value;
+            }
+
+            return columns;
+        }
+
+        private static string GetUniqueColumnName(IEnumerable<string> columnNames, string columnName)
+        {
+            var colName = columnName;
+            var i = 1;
+            while (columnNames.Contains(colName))
+            {
+                colName = columnName + i.ToString();
+                i++;
+            }
+
+            return colName;
         }
 
     }
+
 }
+
+

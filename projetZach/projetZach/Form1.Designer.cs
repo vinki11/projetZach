@@ -28,14 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btn_generer = new System.Windows.Forms.Button();
             this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnParcourir = new System.Windows.Forms.Button();
+            this.graphZach = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.graphZach)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_generer
             // 
-            this.btn_generer.Location = new System.Drawing.Point(329, 149);
+            this.btn_generer.Location = new System.Drawing.Point(328, 221);
             this.btn_generer.Name = "btn_generer";
             this.btn_generer.Size = new System.Drawing.Size(75, 23);
             this.btn_generer.TabIndex = 0;
@@ -59,16 +64,35 @@
             this.btnParcourir.UseVisualStyleBackColor = true;
             this.btnParcourir.Click += new System.EventHandler(this.btn_parcourir_click);
             // 
+            // graphZach
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.graphZach.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.graphZach.Legends.Add(legend1);
+            this.graphZach.Location = new System.Drawing.Point(11, 67);
+            this.graphZach.Name = "graphZach";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.graphZach.Series.Add(series1);
+            this.graphZach.Size = new System.Drawing.Size(490, 139);
+            this.graphZach.TabIndex = 4;
+            this.graphZach.Text = "graphZach";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(482, 194);
+            this.ClientSize = new System.Drawing.Size(580, 324);
+            this.Controls.Add(this.graphZach);
             this.Controls.Add(this.btnParcourir);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.btn_generer);
             this.Name = "Form1";
             this.Text = "Generateur";
+            ((System.ComponentModel.ISupportInitialize)(this.graphZach)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -79,6 +103,7 @@
         private System.Windows.Forms.Button btn_generer;
         private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.Button btnParcourir;
+        private System.Windows.Forms.DataVisualization.Charting.Chart graphZach;
     }
 }
 

@@ -9,3 +9,14 @@ c:\users\vincent\documents\visual studio 2015\Projects\projetZach\projetZach\obj
 c:\users\vincent\documents\visual studio 2015\Projects\projetZach\projetZach\obj\Debug\projetZach.pdb
 c:\users\vincent\documents\visual studio 2015\Projects\projetZach\projetZach\bin\Debug\EPPlus.dll
 c:\users\vincent\documents\visual studio 2015\Projects\projetZach\projetZach\bin\Debug\EPPlus.xml
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\bin\Debug\projetZach.exe.config
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.exe
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.pdb
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\bin\Debug\projetZach.exe
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\bin\Debug\projetZach.pdb
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\bin\Debug\EPPlus.dll
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\bin\Debug\EPPlus.xml
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.csprojResolveAssemblyReference.cache
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.Form1.resources
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.Properties.Resources.resources
+C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.csproj.GenerateResource.Cache

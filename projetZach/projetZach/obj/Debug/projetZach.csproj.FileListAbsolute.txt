@@ -20,3 +20,14 @@ C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZ
 C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.Form1.resources
 C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.Properties.Resources.resources
 C:\Users\Vincent\Documents\projetZachGit\projetZach\projetZach\obj\Debug\projetZach.csproj.GenerateResource.Cache
+E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\projetZach.exe.config
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.csprojResolveAssemblyReference.cache
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.Form1.resources
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.Properties.Resources.resources
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.csproj.GenerateResource.Cache
+E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\projetZach.exe
+E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\projetZach.pdb
+E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.dll
+E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.xml
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.exe
+E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.pdb

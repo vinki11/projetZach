@@ -48,12 +48,12 @@ namespace projetZach
                             //string query = string.Format("select shipcity, count(orderid) from orders where shipcountry = '{0}' group by shipcity", ddlCountries.SelectedValue);
                             DataTable dt = new DataTable();
 
-                            dt = getColonne(fileName);
+                            dt = getNewTyDataTable(fileName);
                             string[] x = new string[dt.Rows.Count];
                             int[] y = new int[dt.Rows.Count];
-                            for (int i = 0; i < dt.Rows.Count; i++)
+                            for (int i = 0; i < dt.Rows.Count - 1; i++)
                             {
-                                x[i] = dt.Rows[i][0].ToString();
+                                x[i] = "Test";
                                 y[i] = Convert.ToInt32(dt.Rows[i][1]);
                             }
                             graphZach.Series[0].Points.DataBindXY(x, y);
@@ -67,12 +67,12 @@ namespace projetZach
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erreur : Impossible de lire le fichier - Zach tu fais surment quelquechose de pas correct /n" + ex.Message);
+                    MessageBox.Show("Erreur : Impossible de lire le fichier - Zach tu fais surment quelquechose de pas correct \n" + ex.Message);
                 }
             }
         }
 
-        private DataTable getColonne(string filename)
+        private DataTable getNewTyDataTable(string filename)
         {
             string csvFileName = filename;
             string excelFileName = Path.GetFileNameWithoutExtension(filename) + ".xlsx";
@@ -104,7 +104,7 @@ namespace projetZach
                 dt = GetWorksheetAsDataTable(worksheet);
                 //aller chercher la bonne colonne et l'assigner a un dt fix
                 dtColonne.Columns.Add(dt.Columns[0].ColumnName, dt.Columns[0].DataType);
-                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType);
+                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType); //mettre 53 ici une fois avec les vrai données
 
                 //Boucler dans toute les rows et lui assigner la valeur a la place NewTy
                 foreach (DataRow datarow in dt.Rows)
@@ -136,28 +136,19 @@ namespace projetZach
             format.Delimiter = ',';
             format.EOL = "\r";              // DEFAULT IS "\r\n";
                                             // format.TextQualifier = '"';
-           /* String outputPath = "";
+            String outputPath = "";
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 outputPath = fbd.SelectedPath;
-            }*/
+            }
 
             using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
                 worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                /*package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));*/
-
-                dt = GetWorksheetAsDataTable(worksheet);
-                //aller chercher la bonne colonne et l'assigner a un dt fix
-                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType);
-
-                //Boucler dans toute les rows et lui assigner la valeur a la place NewTy
-                foreach(DataRow datarow in dt.Rows){
-                    dtColonne.Rows.Add(datarow[1]);
-                }
+                package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
 
             }
 

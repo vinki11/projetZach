@@ -88,7 +88,7 @@ namespace projetZach
                             double[] y = new double[dt.Rows.Count];
                             for (int i = 0; i < dt.Rows.Count - 1; i++)
                             {
-                                x[i] = "Test";
+                                x[i] = dt.Rows[i][0].ToString();
                                 y[i] = Convert.ToDouble(dt.Rows[i][78], CultureInfo.InvariantCulture);
                             }
                             graphZach.Series[0].Points.DataBindXY(x, y);

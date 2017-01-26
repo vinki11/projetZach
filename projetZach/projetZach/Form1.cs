@@ -47,6 +47,8 @@ namespace projetZach
                             graphZach.Visible = true;
                             //string query = string.Format("select shipcity, count(orderid) from orders where shipcountry = '{0}' group by shipcity", ddlCountries.SelectedValue);
                             DataTable dt = new DataTable();
+
+                            dt = getColonne(fileName);
                             string[] x = new string[dt.Rows.Count];
                             int[] y = new int[dt.Rows.Count];
                             for (int i = 0; i < dt.Rows.Count; i++)
@@ -59,7 +61,7 @@ namespace projetZach
                            //graphZach.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
                             graphZach.Legends[0].Enabled = true;
 
-                            Convert_CSV_To_Excel(fileName);
+                            //Convert_CSV_To_Excel(fileName);
                         }
                     }
                 }
@@ -69,7 +71,52 @@ namespace projetZach
                 }
             }
         }
-    
+
+        private DataTable getColonne(string filename)
+        {
+            string csvFileName = filename;
+            string excelFileName = Path.GetFileNameWithoutExtension(filename) + ".xlsx";
+
+            string worksheetsName = Path.GetFileNameWithoutExtension(filename);
+
+            bool firstRowIsHeader = false;
+            DataTable dt = new DataTable();
+            DataTable dtColonne = new DataTable();
+
+            var format = new ExcelTextFormat();
+            format.Delimiter = ',';
+            format.EOL = "\r";              // DEFAULT IS "\r\n";
+                                            // format.TextQualifier = '"';
+                                            /* String outputPath = "";
+                                             FolderBrowserDialog fbd = new FolderBrowserDialog();
+                                             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
+                                             if (fbd.ShowDialog() == DialogResult.OK)
+                                             {
+                                                 outputPath = fbd.SelectedPath;
+                                             }*/
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                /*package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));*/
+
+                dt = GetWorksheetAsDataTable(worksheet);
+                //aller chercher la bonne colonne et l'assigner a un dt fix
+                dtColonne.Columns.Add(dt.Columns[0].ColumnName, dt.Columns[0].DataType);
+                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType);
+
+                //Boucler dans toute les rows et lui assigner la valeur a la place NewTy
+                foreach (DataRow datarow in dt.Rows)
+                {
+                    dtColonne.Rows.Add(datarow[0],datarow[1]);
+                }
+
+            }
+
+            return dtColonne;
+
+        }
 
         private void Convert_CSV_To_Excel(string filename)
         {
@@ -106,6 +153,12 @@ namespace projetZach
                 dt = GetWorksheetAsDataTable(worksheet);
                 //aller chercher la bonne colonne et l'assigner a un dt fix
                 dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType);
+
+                //Boucler dans toute les rows et lui assigner la valeur a la place NewTy
+                foreach(DataRow datarow in dt.Rows){
+                    dtColonne.Rows.Add(datarow[1]);
+                }
+
             }
 
 

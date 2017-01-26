@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.Windows.Forms;
-
+using System.Globalization;
 
 namespace projetZach
 {
@@ -25,10 +25,12 @@ namespace projetZach
             Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.InitialDirectory = "c:\\";//mettre directory par defaut de Zach ?
             openFileDialog1.Filter = "Fichier csv(*.csv)|*.csv|Tous les fichiers (*.*)|*.*";
-            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = false;
+
+            List<String> csvLines = new List<String>();
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -41,20 +43,53 @@ namespace projetZach
                             FileStream fs = myStream as FileStream;
                             string fileName = "";
                             fileName = fs.Name;
-                            txtFileName.Text = Path.GetFileName(fileName);                            
+                            txtFileName.Text = Path.GetFileName(fileName);
+                            DataTable dt = new DataTable();
+
+                            String csvLine;
+                            StreamReader reader = new StreamReader(fileName);
+                            while ((csvLine = reader.ReadLine()) != null)
+                            {
+                                csvLines.Add(csvLine);
+                            }
+
+                            int lineCount = 0;
+                            foreach (String readerLine in csvLines)
+                            {
+                                var values = readerLine.Split('\t');
+                                if (lineCount != 0)
+                                {
+                                    dt.Rows.Add();
+                                }
+                                int colCount = 0;
+                                foreach (String value in values)
+                                {
+                                    //On ajoute les colonnes au DataTable
+                                   if (lineCount == 0)
+                                    {
+                                        dt.Columns.Add("Colonne " + colCount); //on met pas les vrai nom de colonnes car doublons de nom de colonnes
+                                    }
+                                   else
+                                   {
+                                       dt.Rows[lineCount-1][colCount] = value;
+                                   }
+                                    colCount++;
+                                }
+                                lineCount++;
+                            }
 
                             //code pour le graph
                             graphZach.Visible = true;
                             //string query = string.Format("select shipcity, count(orderid) from orders where shipcountry = '{0}' group by shipcity", ddlCountries.SelectedValue);
-                            DataTable dt = new DataTable();
+                            
 
-                            dt = getNewTyDataTable(fileName);
+                            //dt = getNewTyDataTable(fileName);
                             string[] x = new string[dt.Rows.Count];
-                            int[] y = new int[dt.Rows.Count];
+                            double[] y = new double[dt.Rows.Count];
                             for (int i = 0; i < dt.Rows.Count - 1; i++)
                             {
                                 x[i] = "Test";
-                                y[i] = Convert.ToInt32(dt.Rows[i][1]);
+                                y[i] = Convert.ToDouble(dt.Rows[i][78], CultureInfo.InvariantCulture);
                             }
                             graphZach.Series[0].Points.DataBindXY(x, y);
                             //graphZach.Series[0].ChartType = SeriesChartType.Pie;

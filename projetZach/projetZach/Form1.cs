@@ -15,6 +15,9 @@ namespace projetZach
 {
     public partial class Form1 : Form
     {
+        string fileName = "";
+        DataTable dt;
+
         public Form1()
         {
             InitializeComponent();
@@ -41,18 +44,17 @@ namespace projetZach
                         using (myStream)
                         {
                             FileStream fs = myStream as FileStream;
-                            string fileName = "";
                             fileName = fs.Name;
                             txtFileName.Text = Path.GetFileName(fileName);
-                            DataTable dt = new DataTable();
+                            dt = new DataTable();
 
                             String csvLine;
                             StreamReader reader = new StreamReader(fileName);
                             while ((csvLine = reader.ReadLine()) != null)
                             {
-                                csvLines.Add(csvLine);
+                                csvLines.Add(csvLine.Replace('.',',')); //change en virgule mais ca fix pas le problème d'affichage a Zach
                             }
-
+                            //On construit le datatable avec le csv
                             int lineCount = 0;
                             foreach (String readerLine in csvLines)
                             {
@@ -71,7 +73,16 @@ namespace projetZach
                                     }
                                    else
                                    {
-                                       dt.Rows[lineCount-1][colCount] = value;
+                                        int iValue = 0;
+                                        if (int.TryParse(value, out iValue)) //ca marche pas pensé a un moyen de mettre les esti de format comme Zach veut
+                                        {
+                                            dt.Rows[lineCount - 1][colCount] = iValue;
+                                        }
+                                        else
+                                        {
+                                            dt.Rows[lineCount - 1][colCount] = value;
+                                        }
+                                            
                                    }
                                     colCount++;
                                 }
@@ -89,7 +100,7 @@ namespace projetZach
                             for (int i = 0; i < dt.Rows.Count - 1; i++)
                             {
                                 x[i] = dt.Rows[i][0].ToString();
-                                y[i] = Convert.ToDouble(dt.Rows[i][78], CultureInfo.InvariantCulture);
+                                y[i] = Convert.ToDouble(dt.Rows[i][78]);
                             }
                             graphZach.Series[0].Points.DataBindXY(x, y);
                             //graphZach.Series[0].ChartType = SeriesChartType.Pie;
@@ -153,10 +164,28 @@ namespace projetZach
 
         }
 
-        private void Convert_CSV_To_Excel(string filename)
+        private void ExportToExcel(DataTable data, string nomFichier)
         {
-            /*string csvFileName = @"FL_insurance_sample.csv";
-            string excelFileName = @"FL_insurance_sample.xls";*/
+            string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + ".xlsx";
+
+            String outputPath = "";
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                outputPath = fbd.SelectedPath;
+            }
+
+            using (ExcelPackage pck = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
+                ws.Cells["A1"].LoadFromDataTable(data, true);
+                pck.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
+            }
+        }
+
+        /*private void Convert_CSV_To_Excel(string filename)
+        {
 
             string csvFileName = filename;
             string excelFileName = Path.GetFileNameWithoutExtension(filename) + ".xlsx";
@@ -188,11 +217,11 @@ namespace projetZach
             }
 
 
-            /*Console.WriteLine("Finished!");
-            Console.ReadLine();*/
+            Console.WriteLine("Finished!");
+            Console.ReadLine();
 
             //http://stackoverflow.com/questions/29976752/create-excel-graph-with-epplus
-        }
+        }*/
 
         public static DataTable GetWorksheetAsDataTable(ExcelWorksheet worksheet)
         {
@@ -267,6 +296,10 @@ namespace projetZach
             return colName;
         }
 
+        private void btn_generer_Click(object sender, EventArgs e)
+        {
+            ExportToExcel(dt, fileName);
+        }
     }
 
 }

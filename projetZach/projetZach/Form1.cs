@@ -69,7 +69,7 @@ namespace projetZach
                                     //On ajoute les colonnes au DataTable
                                    if (lineCount == 0)
                                     {
-                                        dt.Columns.Add("Colonne " + colCount); //on met pas les vrai nom de colonnes car doublons de nom de colonnes
+                                      dt.Columns.Add(colName(value,dt)); //Fonction recursive qui ajoute des espace a coté du nom de colonne pour évité les 12 millions de doublons. Datatable permet pas de doublons de nom de colonnes
                                     }
                                    else
                                    {
@@ -118,52 +118,6 @@ namespace projetZach
             }
         }
 
-        private DataTable getNewTyDataTable(string filename)
-        {
-            string csvFileName = filename;
-            string excelFileName = Path.GetFileNameWithoutExtension(filename) + ".xlsx";
-
-            string worksheetsName = Path.GetFileNameWithoutExtension(filename);
-
-            bool firstRowIsHeader = false;
-            DataTable dt = new DataTable();
-            DataTable dtColonne = new DataTable();
-
-            var format = new ExcelTextFormat();
-            format.Delimiter = ',';
-            format.EOL = "\r";              // DEFAULT IS "\r\n";
-                                            // format.TextQualifier = '"';
-                                            /* String outputPath = "";
-                                             FolderBrowserDialog fbd = new FolderBrowserDialog();
-                                             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
-                                             if (fbd.ShowDialog() == DialogResult.OK)
-                                             {
-                                                 outputPath = fbd.SelectedPath;
-                                             }*/
-
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
-                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                /*package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));*/
-
-                dt = GetWorksheetAsDataTable(worksheet);
-                //aller chercher la bonne colonne et l'assigner a un dt fix
-                dtColonne.Columns.Add(dt.Columns[0].ColumnName, dt.Columns[0].DataType);
-                dtColonne.Columns.Add(dt.Columns[1].ColumnName, dt.Columns[1].DataType); //mettre 53 ici une fois avec les vrai données
-
-                //Boucler dans toute les rows et lui assigner la valeur a la place NewTy
-                foreach (DataRow datarow in dt.Rows)
-                {
-                    dtColonne.Rows.Add(datarow[0],datarow[1]);
-                }
-
-            }
-
-            return dtColonne;
-
-        }
-
         private void ExportToExcel(DataTable data, string nomFichier)
         {
             string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + ".xlsx";
@@ -183,122 +137,23 @@ namespace projetZach
                 pck.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
             }
         }
-
-        /*private void Convert_CSV_To_Excel(string filename)
-        {
-
-            string csvFileName = filename;
-            string excelFileName = Path.GetFileNameWithoutExtension(filename) + ".xlsx";
-
-            string worksheetsName = Path.GetFileNameWithoutExtension(filename);
-
-            bool firstRowIsHeader = false;
-            DataTable dt = new DataTable();
-            DataTable dtColonne = new DataTable();
-
-            var format = new ExcelTextFormat();
-            format.Delimiter = ',';
-            format.EOL = "\r";              // DEFAULT IS "\r\n";
-                                            // format.TextQualifier = '"';
-            String outputPath = "";
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                outputPath = fbd.SelectedPath;
-            }
-
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
-                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                package.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
-
-            }
-
-
-            Console.WriteLine("Finished!");
-            Console.ReadLine();
-
-            //http://stackoverflow.com/questions/29976752/create-excel-graph-with-epplus
-        }*/
-
-        public static DataTable GetWorksheetAsDataTable(ExcelWorksheet worksheet)
-        {
-            var dt = new DataTable(worksheet.Name);
-            dt.Columns.AddRange(GetDataColumns(worksheet).ToArray());
-            var headerOffset = 1; //have to skip header row
-            var width = dt.Columns.Count;
-            var depth = GetTableDepth(worksheet, headerOffset);
-            for (var i = 1; i <= depth; i++)
-            {
-                var row = dt.NewRow();
-                for (var j = 1; j <= width; j++)
-                {
-                    var currentValue = worksheet.Cells[i + headerOffset, j].Value;
-
-                    //have to decrement b/c excel is 1 based and datatable is 0 based.
-                    row[j - 1] = currentValue == null ? null : currentValue.ToString();
-                }
-
-                dt.Rows.Add(row);
-            }
-
-            return dt;
-        }
-
-        private static int GetTableDepth(ExcelWorksheet worksheet, int headerOffset)
-        {
-            var i = 1;
-            var j = 1;
-            var cellValue = worksheet.Cells[i + headerOffset, j].Value;
-            while (cellValue != null)
-            {
-                i++;
-                cellValue = worksheet.Cells[i + headerOffset, j].Value;
-            }
-
-            return i - 1; //subtract one because we're going from rownumber (1 based) to depth (0 based)
-        }
-
-        private static IEnumerable<DataColumn> GetDataColumns(ExcelWorksheet worksheet)
-        {
-            return GatherColumnNames(worksheet).Select(x => new DataColumn(x));
-        }
-
-        private static IEnumerable<string> GatherColumnNames(ExcelWorksheet worksheet)
-        {
-            var columns = new List<string>();
-
-            var i = 1;
-            var j = 1;
-            var columnName = worksheet.Cells[i, j].Value;
-            while (columnName != null)
-            {
-                columns.Add(GetUniqueColumnName(columns, columnName.ToString()));
-                j++;
-                columnName = worksheet.Cells[i, j].Value;
-            }
-
-            return columns;
-        }
-
-        private static string GetUniqueColumnName(IEnumerable<string> columnNames, string columnName)
-        {
-            var colName = columnName;
-            var i = 1;
-            while (columnNames.Contains(colName))
-            {
-                colName = columnName + i.ToString();
-                i++;
-            }
-
-            return colName;
-        }
+        
 
         private void btn_generer_Click(object sender, EventArgs e)
         {
             ExportToExcel(dt, fileName);
+        }
+
+        private string colName(string value, DataTable data)
+        {
+            string colonneName = "";
+
+            if (data.Columns.Contains(value))
+                colonneName = colName(value + " ", data);
+            else
+                colonneName = value;
+
+            return colonneName;
         }
     }
 

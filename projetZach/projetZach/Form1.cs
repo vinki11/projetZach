@@ -74,6 +74,10 @@ namespace projetZach
                                    if (lineCount == 0)
                                     {
                                       dt.Columns.Add(colName(value,dt)); //Fonction recursive qui ajoute des espace a coté du nom de colonne pour évité les 12 millions de doublons. Datatable permet pas de doublons de nom de colonnes
+                                      if (colCount == 77 || colCount == 78 || colCount == 79)
+                                        {
+                                            dt.Columns[colCount].DataType = typeof(Double);
+                                        }
                                     }
                                    else
                                    {
@@ -118,7 +122,7 @@ namespace projetZach
                             for (var i = 1; i <= maxCycle; i++)
                             {
                                 this.Controls.Find("checkbox" + i, true)[0].Enabled = true;
-                                //Checkbox(this.Controls.Find("checkbox" + i, true)[0]).Checked = true;
+                                ((CheckBox)this.Controls.Find("checkbox" + i, true)[0]).Checked = true;
                             }
 
                             
@@ -143,7 +147,9 @@ namespace projetZach
                 {
                     if(dr[0].ToString().Contains(noCycle))
                     {
+                        dr[77] = 0;
                         dr[78] = 0;
+                        dr[79] = 0;
                     }
                 }
             }
@@ -153,6 +159,24 @@ namespace projetZach
 
         private void ExportToExcel(DataTable data, string nomFichier)
         {
+            DataTable newData = new DataTable();
+
+            //Mettre à 0 les cycle que on ignore
+            List<String> cycleZeroListe = new List<string>();
+            for (var i = 1; i <= maxCycle; i++)
+            {
+                if (((CheckBox)this.Controls.Find("checkbox" + i, true)[0]).Checked == false)
+                {
+                    cycleZeroListe.Add(i.ToString());
+                }
+                
+            }
+            string[] cycleZeroArray;
+            cycleZeroArray = cycleZeroListe.ToArray();
+
+            newData = PutZeros(data, cycleZeroArray);
+
+
             string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + ".xlsx";
 
             String outputPath = "";
@@ -161,14 +185,19 @@ namespace projetZach
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 outputPath = fbd.SelectedPath;
+
+                using (ExcelPackage pck = new ExcelPackage(new FileInfo(excelFileName)))
+                {
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
+                    ws.Cells["A1"].LoadFromDataTable(newData, true);
+                    pck.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
+
+
+                    MessageBox.Show("L'exportation est terminé");
+                }
             }
 
-            using (ExcelPackage pck = new ExcelPackage(new FileInfo(excelFileName)))
-            {
-                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
-                ws.Cells["A1"].LoadFromDataTable(data, true);
-                pck.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
-            }
+            
         }
         
 
@@ -177,7 +206,6 @@ namespace projetZach
             try
             {
                 ExportToExcel(dt, fileName);
-                MessageBox.Show("L'exportation est terminé");
 
             }
             catch

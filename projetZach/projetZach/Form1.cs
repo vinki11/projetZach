@@ -17,10 +17,14 @@ namespace projetZach
     {
         string fileName = "";
         DataTable dt;
+        int maxCycle = 0;
 
         public Form1()
         {
             InitializeComponent();
+
+            graphZach.Series[0].Name = "NewTy";
+            graphZach.Series[0].LegendText = "NewTy";
         }
 
         private void btn_parcourir_click(object sender, EventArgs e)
@@ -73,21 +77,20 @@ namespace projetZach
                                     }
                                    else
                                    {
-                                        int iValue = 0;
-                                        if (int.TryParse(value, out iValue)) //ca marche pas pensé a un moyen de mettre les esti de format comme Zach veut
-                                        {
-                                            dt.Rows[lineCount - 1][colCount] = iValue;
-                                        }
+                                        decimal dec;
+                                        if (Decimal.TryParse(value, out dec))
+                                            dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString()).ToString("G29");
                                         else
-                                        {
                                             dt.Rows[lineCount - 1][colCount] = value;
-                                        }
                                             
                                    }
                                     colCount++;
                                 }
                                 lineCount++;
                             }
+
+                            //fictif mais tentative de mettre des zéros dans le graphique
+                            //dt = PutZeros(dt,new string[] {"4", "7"});
 
                             //code pour le graph
                             graphZach.Visible = true;
@@ -99,15 +102,26 @@ namespace projetZach
                             double[] y = new double[dt.Rows.Count];
                             for (int i = 0; i < dt.Rows.Count - 1; i++)
                             {
-                                x[i] = dt.Rows[i][0].ToString();
+                                //Calcul le cycle maximum pour afficher les checkbox
+                                if (Convert.ToInt32(dt.Rows[i][0]) > maxCycle)
+                                {
+                                    maxCycle = Convert.ToInt32(dt.Rows[i][0]);
+                                }
+                                //Definit les données pour le graphique
+                                x[i] = dt.Rows[i][0].ToString(); /*decimal.Parse(dt.Rows[i][0].ToString()).ToString("G29")*/;
                                 y[i] = Convert.ToDouble(dt.Rows[i][78]);
                             }
                             graphZach.Series[0].Points.DataBindXY(x, y);
-                            //graphZach.Series[0].ChartType = SeriesChartType.Pie;
-                           //graphZach.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
-                            graphZach.Legends[0].Enabled = true;
+                            graphZach.ChartAreas["ChartArea1"].AxisY.MajorGrid.LineWidth = 0;
 
-                            //Convert_CSV_To_Excel(fileName);
+                            //Affichage des checkbox
+                            for (var i = 1; i <= maxCycle; i++)
+                            {
+                                this.Controls.Find("checkbox" + i, true)[0].Enabled = true;
+                                //Checkbox(this.Controls.Find("checkbox" + i, true)[0]).Checked = true;
+                            }
+
+                            
                         }
                     }
                 }
@@ -116,6 +130,25 @@ namespace projetZach
                     MessageBox.Show("Erreur : Impossible de lire le fichier - Zach tu fais surment quelquechose de pas correct \n" + ex.Message);
                 }
             }
+        }
+
+        private DataTable PutZeros(DataTable data, string[] noCycles)
+        {
+            DataTable newData = new DataTable();
+            newData = data.Copy();
+
+            foreach (DataRow dr in newData.Rows)
+            {
+                foreach(string noCycle in noCycles)
+                {
+                    if(dr[0].ToString().Contains(noCycle))
+                    {
+                        dr[78] = 0;
+                    }
+                }
+            }
+
+            return newData;
         }
 
         private void ExportToExcel(DataTable data, string nomFichier)
@@ -141,7 +174,17 @@ namespace projetZach
 
         private void btn_generer_Click(object sender, EventArgs e)
         {
-            ExportToExcel(dt, fileName);
+            try
+            {
+                ExportToExcel(dt, fileName);
+                MessageBox.Show("L'exportation est terminé");
+
+            }
+            catch
+            (Exception ex)
+            {
+                MessageBox.Show("Erreur : Une erreur est survenue lors de l'exportation - Envoit un texte à Vince avec un screenshot pour voir \n" + ex.Message);
+            }
         }
 
         private string colName(string value, DataTable data)

@@ -31,3 +31,14 @@ E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.dll
 E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.xml
 E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.exe
 E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.pdb
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\projetZach.exe.config
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\projetZach.exe
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\projetZach.pdb
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\EPPlus.dll
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\EPPlus.xml
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.csprojResolveAssemblyReference.cache
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.Form1.resources
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.Properties.Resources.resources
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.csproj.GenerateResource.Cache
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.exe
+C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\obj\Debug\projetZach.pdb

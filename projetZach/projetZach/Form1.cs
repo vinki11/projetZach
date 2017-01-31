@@ -18,6 +18,7 @@ namespace projetZach
         string fileName = "";
         DataTable dt;
         int maxCycle = 0;
+        CultureInfo ci;
 
         public Form1()
         {
@@ -25,6 +26,8 @@ namespace projetZach
 
             graphZach.Series[0].Name = "NewTy";
             graphZach.Series[0].LegendText = "NewTy";
+
+            ci = new CultureInfo("fr-CA");
         }
 
         private void btn_parcourir_click(object sender, EventArgs e)
@@ -83,7 +86,7 @@ namespace projetZach
                                    {
                                         decimal dec;
                                         if (Decimal.TryParse(value, out dec))
-                                            dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString()).ToString("G29");
+                                            dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString(), ci ).ToString("G29");
                                         else
                                             dt.Rows[lineCount - 1][colCount] = value;
                                             
@@ -93,12 +96,9 @@ namespace projetZach
                                 lineCount++;
                             }
 
-                            //fictif mais tentative de mettre des zéros dans le graphique
-                            //dt = PutZeros(dt,new string[] {"4", "7"});
-
                             //code pour le graph
                             graphZach.Visible = true;
-                            //string query = string.Format("select shipcity, count(orderid) from orders where shipcountry = '{0}' group by shipcity", ddlCountries.SelectedValue);
+                            
                             
 
                             //dt = getNewTyDataTable(fileName);

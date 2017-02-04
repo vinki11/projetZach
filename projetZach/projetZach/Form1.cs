@@ -19,6 +19,7 @@ namespace projetZach
         DataTable dt;
         int maxCycle = 0;
         CultureInfo ci;
+        String outputPath = "";
 
         public Form1()
         {
@@ -95,44 +96,47 @@ namespace projetZach
                                 }
                                 lineCount++;
                             }
-
-                            //code pour le graph
-                            graphZach.Visible = true;
-                            
-                            
-
-                            //dt = getNewTyDataTable(fileName);
-                            string[] x = new string[dt.Rows.Count];
-                            double[] y = new double[dt.Rows.Count];
-                            for (int i = 0; i < dt.Rows.Count - 1; i++)
-                            {
-                                //Calcul le cycle maximum pour afficher les checkbox
-                                if (Convert.ToInt32(dt.Rows[i][0]) > maxCycle)
-                                {
-                                    maxCycle = Convert.ToInt32(dt.Rows[i][0]);
-                                }
-                                //Definit les données pour le graphique
-                                x[i] = dt.Rows[i][0].ToString(); /*decimal.Parse(dt.Rows[i][0].ToString()).ToString("G29")*/;
-                                y[i] = Convert.ToDouble(dt.Rows[i][78]);
-                            }
-                            graphZach.Series[0].Points.DataBindXY(x, y);
-                            graphZach.ChartAreas["ChartArea1"].AxisY.MajorGrid.LineWidth = 0;
-
-                            //Affichage des checkbox
-                            for (var i = 1; i <= maxCycle; i++)
-                            {
-                                this.Controls.Find("checkbox" + i, true)[0].Enabled = true;
-                                ((CheckBox)this.Controls.Find("checkbox" + i, true)[0]).Checked = true;
-                            }
-
-                            
                         }
+
+                        DrawChart(dt);
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erreur : Impossible de lire le fichier - Zach tu fais surment quelquechose de pas correct \n" + ex.Message);
                 }
+            }
+        }
+
+        private void DrawChart(DataTable data)
+        {
+            //code pour le graph
+            graphZach.Visible = true;
+            
+            //dt = getNewTyDataTable(fileName);
+            string[] x = new string[dt.Rows.Count];
+            double[] y = new double[dt.Rows.Count];
+            for (int i = 0; i < dt.Rows.Count - 1; i++)
+            {
+                //Calcul le cycle maximum pour afficher les checkbox
+                if (Convert.ToInt32(dt.Rows[i][0]) > maxCycle)
+                {
+                    maxCycle = Convert.ToInt32(dt.Rows[i][0]);
+                }
+                //Definit les données pour le graphique
+                x[i] = dt.Rows[i][0].ToString(); /*decimal.Parse(dt.Rows[i][0].ToString()).ToString("G29")*/;
+                y[i] = Convert.ToDouble(dt.Rows[i][78]);
+            }
+            graphZach.Series[0].Points.DataBindXY(x, y);
+            graphZach.ChartAreas["ChartArea1"].AxisY.MajorGrid.LineWidth = 0;
+            graphZach.ChartAreas["ChartArea1"].AxisX.MajorGrid.LineWidth = 0;
+            graphZach.ChartAreas["ChartArea1"].AxisX.LabelStyle.Enabled = false;
+
+            //Affichage des checkbox
+            for (var i = 1; i <= maxCycle; i++)
+            {
+                this.Controls.Find("checkbox" + i, true)[0].Enabled = true;
+                ((CheckBox)this.Controls.Find("checkbox" + i, true)[0]).Checked = true;
             }
         }
 
@@ -178,10 +182,16 @@ namespace projetZach
 
 
             string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + ".xlsx";
-
-            String outputPath = "";
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
+
+            //Le bout de code suivant fonctionne fuck all - pas capable faire starté le dialog a la place que je veux
+            if (outputPath != "")
+            {
+                fbd.SelectedPath = outputPath + "\\"; 
+            }
+
+            
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 outputPath = fbd.SelectedPath;

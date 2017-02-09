@@ -16,6 +16,7 @@ namespace projetZach
     public partial class Form1 : Form
     {
         string fileName = "";
+        DataTable originalDt;
         DataTable dt;
         int maxCycle = 0;
         CultureInfo ci;
@@ -55,6 +56,7 @@ namespace projetZach
                             fileName = fs.Name;
                             txtFileName.Text = Path.GetFileName(fileName);
                             dt = new DataTable();
+                            originalDt = new DataTable();
 
                             String csvLine;
                             StreamReader reader = new StreamReader(fileName);
@@ -97,7 +99,7 @@ namespace projetZach
                                 lineCount++;
                             }
                         }
-
+                        originalDt = dt.Copy();
                         DrawChart(dt);
                     }
                 }
@@ -181,7 +183,7 @@ namespace projetZach
             newData = PutZeros(data, cycleZeroArray);
 
 
-            string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + ".xlsx";
+            string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + "_gen.xlsx";
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
 
@@ -235,6 +237,26 @@ namespace projetZach
                 colonneName = value;
 
             return colonneName;
+        }
+
+        private void CheckChanged(object sender, EventArgs e)
+        {
+            //Mettre à 0 les cycle que on ignore
+            List<String> cycleZeroListe = new List<string>();
+            for (var i = 1; i <= maxCycle; i++)
+            {
+                if (((CheckBox)this.Controls.Find("checkbox" + i, true)[0]).Checked == false)
+                {
+                    cycleZeroListe.Add(i.ToString());
+                }
+
+            }
+            string[] cycleZeroArray;
+            cycleZeroArray = cycleZeroListe.ToArray();
+
+            dt = PutZeros(dt, cycleZeroArray);
+
+            DrawChart(dt);
         }
     }
 

@@ -25,6 +25,8 @@ namespace projetZach
         public Form1()
         {
             InitializeComponent();
+            txtOutputPath.Enabled = false;
+            txtFileName.Enabled = false;
 
             graphZach.Series[0].Name = "NewTy";
             graphZach.Series[0].LegendText = "NewTy";
@@ -32,7 +34,7 @@ namespace projetZach
             ci = new CultureInfo("fr-CA");
         }
 
-        private void btn_parcourir_click(object sender, EventArgs e)
+        private void btn_parcourir_file_click(object sender, EventArgs e)
         {
             Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -163,7 +165,7 @@ namespace projetZach
             return newData;
         }
 
-        private void ExportToExcel(DataTable data, string nomFichier)
+        private void ExportToExcel(DataTable data, string nomFichier, string cheminExportation)
         {
             DataTable newData = new DataTable();
 
@@ -184,30 +186,17 @@ namespace projetZach
 
 
             string excelFileName = Path.GetFileNameWithoutExtension(nomFichier) + "_gen.xlsx";
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
 
-            //Le bout de code suivant fonctionne fuck all - pas capable faire starté le dialog a la place que je veux
-            if (outputPath != "")
+            using (ExcelPackage pck = new ExcelPackage(new FileInfo(excelFileName)))
             {
-                fbd.SelectedPath = outputPath + "\\"; 
-            }
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
+                ws.Cells["A1"].LoadFromDataTable(newData, true);
+                pck.SaveAs(new FileInfo(cheminExportation + "/" + excelFileName));
 
+
+                MessageBox.Show("L'exportation est terminé");
+            }
             
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                outputPath = fbd.SelectedPath;
-
-                using (ExcelPackage pck = new ExcelPackage(new FileInfo(excelFileName)))
-                {
-                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
-                    ws.Cells["A1"].LoadFromDataTable(newData, true);
-                    pck.SaveAs(new FileInfo(outputPath + "/" + excelFileName));
-
-
-                    MessageBox.Show("L'exportation est terminé");
-                }
-            }
 
             
         }
@@ -217,7 +206,31 @@ namespace projetZach
         {
             try
             {
-                ExportToExcel(dt, fileName);
+
+                string errorMessage = "";
+
+                //Verification si il y a un fichier de loadé
+                if (fileName == "")
+                {
+                    errorMessage += "Tu dois sélectionner un fichier à importer \n";
+                }
+
+                //Verification si il y a un chemin d'exportation de sélectionner
+                if (outputPath == "")
+                {
+                    errorMessage += "Tu dois sélectionner un chemin pour l'exportation \n";
+                }
+
+                //Si il y a des erreurs on affiche un message, sinon on fait l'exportation
+                if (errorMessage != "")
+                {
+                    MessageBox.Show("Impossible de faire la génération \n" + errorMessage); 
+                }
+                else
+                {
+                    ExportToExcel(dt, fileName, outputPath);
+                }
+ 
 
             }
             catch
@@ -257,6 +270,19 @@ namespace projetZach
             dt = PutZeros(dt, cycleZeroArray);
 
             DrawChart(dt);
+        }
+
+        private void btnParcourirPath_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                outputPath = fbd.SelectedPath;
+                txtOutputPath.Text = outputPath;
+            }
+
         }
     }
 

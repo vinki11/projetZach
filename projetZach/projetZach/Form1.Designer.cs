@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btn_generer = new System.Windows.Forms.Button();
             this.txtFileName = new System.Windows.Forms.TextBox();
-            this.btnParcourir = new System.Windows.Forms.Button();
+            this.btnParcourirFichier = new System.Windows.Forms.Button();
             this.graphZach = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -48,6 +48,10 @@
             this.checkBox11 = new System.Windows.Forms.CheckBox();
             this.checkBox12 = new System.Windows.Forms.CheckBox();
             this.checkBox13 = new System.Windows.Forms.CheckBox();
+            this.txtOutputPath = new System.Windows.Forms.TextBox();
+            this.btnParcourirPath = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.graphZach)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,34 +67,34 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.Location = new System.Drawing.Point(36, 24);
+            this.txtFileName.Location = new System.Drawing.Point(176, 24);
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(1011, 20);
+            this.txtFileName.Size = new System.Drawing.Size(871, 20);
             this.txtFileName.TabIndex = 2;
             // 
-            // btnParcourir
+            // btnParcourirFichier
             // 
-            this.btnParcourir.Location = new System.Drawing.Point(1053, 24);
-            this.btnParcourir.Name = "btnParcourir";
-            this.btnParcourir.Size = new System.Drawing.Size(75, 23);
-            this.btnParcourir.TabIndex = 3;
-            this.btnParcourir.Text = "Parcourir";
-            this.btnParcourir.UseVisualStyleBackColor = true;
-            this.btnParcourir.Click += new System.EventHandler(this.btn_parcourir_click);
+            this.btnParcourirFichier.Location = new System.Drawing.Point(1053, 24);
+            this.btnParcourirFichier.Name = "btnParcourirFichier";
+            this.btnParcourirFichier.Size = new System.Drawing.Size(75, 23);
+            this.btnParcourirFichier.TabIndex = 3;
+            this.btnParcourirFichier.Text = "Parcourir";
+            this.btnParcourirFichier.UseVisualStyleBackColor = true;
+            this.btnParcourirFichier.Click += new System.EventHandler(this.btn_parcourir_file_click);
             // 
             // graphZach
             // 
-            chartArea2.Name = "ChartArea1";
-            this.graphZach.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.graphZach.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.graphZach.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.graphZach.Legends.Add(legend1);
             this.graphZach.Location = new System.Drawing.Point(36, 80);
             this.graphZach.Name = "graphZach";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.graphZach.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.graphZach.Series.Add(series1);
             this.graphZach.Size = new System.Drawing.Size(1092, 421);
             this.graphZach.TabIndex = 4;
             this.graphZach.Text = "graphZach";
@@ -251,11 +255,50 @@
             this.checkBox13.Text = "13";
             this.checkBox13.UseVisualStyleBackColor = true;
             // 
+            // txtOutputPath
+            // 
+            this.txtOutputPath.Location = new System.Drawing.Point(176, 50);
+            this.txtOutputPath.Name = "txtOutputPath";
+            this.txtOutputPath.Size = new System.Drawing.Size(871, 20);
+            this.txtOutputPath.TabIndex = 18;
+            // 
+            // btnParcourirPath
+            // 
+            this.btnParcourirPath.Location = new System.Drawing.Point(1053, 48);
+            this.btnParcourirPath.Name = "btnParcourirPath";
+            this.btnParcourirPath.Size = new System.Drawing.Size(75, 23);
+            this.btnParcourirPath.TabIndex = 19;
+            this.btnParcourirPath.Text = "Parcourir";
+            this.btnParcourirPath.UseVisualStyleBackColor = true;
+            this.btnParcourirPath.Click += new System.EventHandler(this.btnParcourirPath_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(89, 27);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Fichier importé :";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(59, 53);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(111, 13);
+            this.label2.TabIndex = 21;
+            this.label2.Text = "Chemin d\'exportation :";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1176, 568);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnParcourirPath);
+            this.Controls.Add(this.txtOutputPath);
             this.Controls.Add(this.checkBox13);
             this.Controls.Add(this.checkBox12);
             this.Controls.Add(this.checkBox11);
@@ -270,7 +313,7 @@
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.graphZach);
-            this.Controls.Add(this.btnParcourir);
+            this.Controls.Add(this.btnParcourirFichier);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.btn_generer);
             this.Name = "Form1";
@@ -285,7 +328,7 @@
 
         private System.Windows.Forms.Button btn_generer;
         private System.Windows.Forms.TextBox txtFileName;
-        private System.Windows.Forms.Button btnParcourir;
+        private System.Windows.Forms.Button btnParcourirFichier;
         private System.Windows.Forms.DataVisualization.Charting.Chart graphZach;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
@@ -300,6 +343,10 @@
         private System.Windows.Forms.CheckBox checkBox11;
         private System.Windows.Forms.CheckBox checkBox12;
         private System.Windows.Forms.CheckBox checkBox13;
+        private System.Windows.Forms.TextBox txtOutputPath;
+        private System.Windows.Forms.Button btnParcourirPath;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

@@ -17,7 +17,7 @@ namespace projetZach
     {
         int test = 0;
         string fileName = "";
-        //DataTable originalDt;
+        DataTable originalDt;
         DataTable dt;
         int maxCycle = 0;
         CultureInfo ci;
@@ -67,7 +67,7 @@ namespace projetZach
             {
                 foreach(string noCycle in noCycles)
                 {
-                    if(dr[0].ToString().Contains(noCycle))
+                    if(dr[0].ToString().Equals(noCycle))
                     {
                         dr[77] = 0;
                         dr[78] = 0;
@@ -175,7 +175,7 @@ namespace projetZach
                             fileName = fs.Name;
                             txtFileName.Text = Path.GetFileName(fileName);
                             dt = new DataTable();
-                            //originalDt = new DataTable();
+                            originalDt = new DataTable();
 
                             String csvLine;
                             StreamReader reader = new StreamReader(fileName);
@@ -227,7 +227,7 @@ namespace projetZach
                                 maxCycle = Convert.ToInt32(dt.Rows[i][0]);
                             }
                         }
-                        //originalDt = dt.Copy();
+                        originalDt = dt.Copy();
                         DisableCheckBox();
                         DrawChart(dt);
                         EnableCheckBox();
@@ -306,9 +306,9 @@ namespace projetZach
             string[] cycleZeroArray;
             cycleZeroArray = cycleZeroListe.ToArray();
 
-            dt = PutZeros(dt, cycleZeroArray);
+            dt = PutZeros(originalDt, cycleZeroArray);
 
-            //DrawChart(dt);
+            DrawChart(dt);
         }
 
         #endregion

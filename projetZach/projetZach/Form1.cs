@@ -214,14 +214,21 @@ namespace projetZach
                                     {
                                         if (colCount == 77 || colCount == 78 || colCount == 79)
                                         {
-
-
+                                            double tryParseDouble;
+                                            bool isDouble = Double.TryParse(value, out tryParseDouble);
+                                            if (isDouble)
+                                                dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString(), ci).ToString("G29");
+                                            else
+                                                dt.Rows[lineCount - 1][colCount] = 0;
                                         }
-                                        decimal dec;
-                                        if (Decimal.TryParse(value, out dec))
-                                            dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString(), ci).ToString("G29");
                                         else
-                                            dt.Rows[lineCount - 1][colCount] = value;
+                                        {
+                                            decimal dec;
+                                            if (Decimal.TryParse(value, out dec))
+                                                dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString(), ci).ToString("G29");
+                                            else
+                                                dt.Rows[lineCount - 1][colCount] = value;
+                                        }
 
                                     }
                                     colCount++;

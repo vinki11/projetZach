@@ -74,6 +74,12 @@ namespace projetZach
                         dr[79] = 0;
                     }
                 }
+                if (dr[0].ToString().Equals("0"))
+                {
+                    dr[77] = 0;
+                    dr[78] = 0;
+                    dr[79] = 0;
+                }
             }
 
             return newData;
@@ -206,6 +212,11 @@ namespace projetZach
                                     }
                                     else
                                     {
+                                        if (colCount == 77 || colCount == 78 || colCount == 79)
+                                        {
+
+
+                                        }
                                         decimal dec;
                                         if (Decimal.TryParse(value, out dec))
                                             dt.Rows[lineCount - 1][colCount] = decimal.Parse(value.ToString(), ci).ToString("G29");
@@ -227,6 +238,7 @@ namespace projetZach
                                 maxCycle = Convert.ToInt32(dt.Rows[i][0]);
                             }
                         }
+                        dt = PutZeros(dt, new string[1] { "" });
                         originalDt = dt.Copy();
                         DisableCheckBox();
                         DrawChart(dt);

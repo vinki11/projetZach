@@ -27,8 +27,6 @@ E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.Properties.
 E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.csproj.GenerateResource.Cache
 E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\projetZach.exe
 E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\projetZach.pdb
-E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.dll
-E:\Documents D\projetZach\projetZach\projetZach\bin\Debug\EPPlus.xml
 E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.exe
 E:\Documents D\projetZach\projetZach\projetZach\obj\Debug\projetZach.pdb
 C:\Users\gelvin01\Desktop\projetZach-master\projetZach\projetZach\bin\Debug\projetZach.exe.config

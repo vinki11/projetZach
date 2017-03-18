@@ -45,6 +45,8 @@ namespace projetZach
 
             graphZach.Series[0].Name = "NewTy";
             graphZach.Series[0].LegendText = "NewTy";
+            graphZach.Series[1].Name = "NewTx";
+            graphZach.Series[1].LegendText = "NewTx";
 
             ci = new CultureInfo("fr-CA");
         }
@@ -59,13 +61,24 @@ namespace projetZach
             //dt = getNewTyDataTable(fileName);
             string[] x = new string[dt.Rows.Count];
             double[] y = new double[dt.Rows.Count];
+            string[] x2 = new string[dt.Rows.Count];
+            double[] y2 = new double[dt.Rows.Count];
             for (int i = 0; i < dt.Rows.Count - 1; i++)
             {
                 //Definit les données pour le graphique
                 x[i] = dt.Rows[i][0].ToString(); /*decimal.Parse(dt.Rows[i][0].ToString()).ToString("G29")*/;
                 y[i] = Convert.ToDouble(dt.Rows[i][78]);
             }
+
+            for (int i = 0; i < dt.Rows.Count - 1; i++)
+            {
+                //Definit les données pour le graphique
+                x2[i] = dt.Rows[i][0].ToString(); /*decimal.Parse(dt.Rows[i][0].ToString()).ToString("G29")*/;
+                y2[i] = Convert.ToDouble(dt.Rows[i][77]);
+            }
+
             graphZach.Series[0].Points.DataBindXY(x, y);
+            graphZach.Series[1].Points.DataBindXY(x2, y2);
             graphZach.ChartAreas["ChartArea1"].AxisY.MajorGrid.LineWidth = 0;
             graphZach.ChartAreas["ChartArea1"].AxisX.MajorGrid.LineWidth = 0;
             graphZach.ChartAreas["ChartArea1"].AxisX.LabelStyle.Enabled = false;
@@ -276,7 +289,7 @@ namespace projetZach
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erreur : Impossible de lire le fichier - Zach tu fais surment quelquechose de pas correct \n" + ex.Message);
+                    MessageBox.Show("Erreur : Impossible de lire le fichier - Il se peut que le format de fichier ne soit pas adéquat \n" + ex.Message);
                 }
             }
         }
@@ -304,13 +317,13 @@ namespace projetZach
                 //Verification si il y a un fichier de loadé
                 if (fileName == "")
                 {
-                    errorMessage += "Tu dois sélectionner un fichier à importer \n";
+                    errorMessage += "Vous devez sélectionner un fichier à importer \n";
                 }
 
                 //Verification si il y a un chemin d'exportation de sélectionner
                 if (outputPath == "")
                 {
-                    errorMessage += "Tu dois sélectionner un chemin pour l'exportation \n";
+                    errorMessage += "Vous devez sélectionner un chemin pour l'exportation \n";
                 }
 
                 //Si il y a des erreurs on affiche un message, sinon on fait l'exportation
@@ -328,7 +341,7 @@ namespace projetZach
             catch
             (Exception ex)
             {
-                MessageBox.Show("Erreur : Une erreur est survenue lors de l'exportation - Envoit un texte à Vince avec un screenshot pour voir \n" + ex.Message);
+                MessageBox.Show("Erreur : Une erreur est survenue lors de l'exportation \n" + ex.Message);
             }
         }
 

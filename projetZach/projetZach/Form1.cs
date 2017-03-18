@@ -83,6 +83,10 @@ namespace projetZach
                 {
                     if(dr[0].ToString().Equals(noCycle))
                     {
+                        dr[73] = 0;
+                        dr[74] = 0;
+                        dr[75] = 0;
+                        dr[76] = 0;
                         dr[77] = 0;
                         dr[78] = 0;
                         dr[79] = 0;
@@ -90,6 +94,10 @@ namespace projetZach
                 }
                 if (dr[0].ToString().Equals("0"))
                 {
+                    dr[73] = 0;
+                    dr[74] = 0;
+                    dr[75] = 0;
+                    dr[76] = 0;
                     dr[77] = 0;
                     dr[78] = 0;
                     dr[79] = 0;
